@@ -77,7 +77,7 @@ Vagrant.configure(2) do |config|
   config.vm.provision "shell", inline: <<-SHELL
     set -x
     sudo apt-get update
-    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 ntpd
+    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 libxss1 libgconf-2-4 openntpd
 
     git clone --recursive https://github.com/AtomicGameEngine/AtomicGameEngine /atomic_repo
 
