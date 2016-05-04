@@ -1,3 +1,19 @@
+# atomic-vagrant
+
+A [Vagrant](https://vagrantup.com) configuration to produce linux builds of the [Atomic Game Engine](http://atomicgameengine.com/).
+
+## Usage
+
+Simply clone the repository, install vagrant-vbguest, and run vagrant:
+
+```
+git clone https://github.com/bdero/atomic-vagrant.git
+cd atomic-vagrant/
+
+vagrant plugin install vagrant-vbguest
+vagrant up --provision
+```
+
 ## Troubleshooting
 
 ### Time synchronization issues
@@ -22,5 +38,5 @@ Wed May  4 01:45:31 EDT 2016
 ```
 A possible fix would be to install NTP on the host. The provisioning faze should have resulted in NTP being installed on the guest.
 
-Arch Linux host: `pacman -Sy ntp`
-Debian or Ubuntu host: `apt-get install ntpd`
+- **Arch Linux** host: `pacman -Sy ntp`
+- **Debian** or **Ubuntu** host: `apt-get install ntpd`
