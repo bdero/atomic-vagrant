@@ -14,6 +14,20 @@ vagrant plugin install vagrant-vbguest
 vagrant up --provision
 ```
 
+If you want to run the provision script again, this can be done with `vagrant provision`. See also [Cleanup]()
+
+## Cleanup
+
+Once the repo directory is created on checkout, the state of git is on your control - it will not be updated by the provision script
+If you wish to start from a fresh build, simply destroy the vagrant instance and delete the shared `repo` directory.
+
+```
+vagrant destroy
+rm -rf repo/
+
+vagrant up
+```
+
 ## Troubleshooting
 
 ### Time synchronization issues
