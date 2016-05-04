@@ -76,6 +76,7 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
     set -x
+
     sudo apt-get update
     sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 libxss1 libgconf-2-4 openntpd
 
@@ -84,5 +85,8 @@ Vagrant.configure(2) do |config|
     # Note: Build_AtomicEditor.sh assumes the CWD is at the root of the repository.
     cd /atomic_repo
     ./Build_AtomicEditor.sh
+
+    # Create a symlink so that libcef can be found when launching the editor executable.
+    ln -s ../../Submodules/CEF/Linux/Release/libcef.so /atomic_repo/Artifacts/Build/Linux/libcef.so
   SHELL
 end
