@@ -75,9 +75,14 @@ Vagrant.configure(2) do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+    set -x
     sudo apt-get update
-    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev
+    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev ntpd
+
     git clone --recursive https://github.com/AtomicGameEngine/AtomicGameEngine /atomic_repo
-    /atomc_repo/Build_AtomicEditor.sh
+
+    # Note: Build_AtomicEditor.sh assumes the CWD is at the root of the repository.
+    cd /atomic_repo
+    ./Build_AtomicEditor.sh
   SHELL
 end
