@@ -5,7 +5,7 @@ MEMORY = 4096
 CPU_COUNT = 2
 ENABLE_VBOX_GUI = true
 
-GUEST_GIT_DIRECTORY = "/atomic_repo"
+GUEST_GIT_DIRECTORY = "/atomic"
 
 
 unless Vagrant.has_plugin?("vagrant-vbguest")
@@ -70,7 +70,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "repo", GUEST_GIT_DIRECTORY, create: true
+  config.vm.synced_folder "atomic", GUEST_GIT_DIRECTORY, create: true
   config.vm.synced_folder  ".", "/vagrant", disabled: true
 
   # Provider-specific configuration so you can fine-tune various
@@ -114,6 +114,6 @@ Vagrant.configure(2) do |config|
     ./Build_AtomicEditor.sh
 
     # Create a symlink so that libcef can be found when launching the editor executable.
-    ln -s ../../Submodules/CEF/Linux/Release/libcef.so #{GUEST_GIT_DIRECTORY}/Artifacts/Build/Linux/libcef.so
+    ln -s ../../Submodules/CEF/Linux/Release/libcef.so #{GUEST_GIT_DIRECTORY}/Artifacts/AtomicEditor/libcef.so
   SHELL
 end
