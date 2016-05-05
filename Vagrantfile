@@ -1,9 +1,34 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+MEMORY = 4096
+CPU_COUNT = 2
+ENABLE_VBOX_GUI = true
+
+GUEST_GIT_DIRECTORY = "/atomic_repo"
+
+
 unless Vagrant.has_plugin?("vagrant-vbguest")
   raise "Please install the vagrant-vbguest plugin by running `vagrant plugin install vagrant-vbguest`"
 end
+
+
+xubuntu_install = ""
+if ENABLE_VBOX_GUI
+  xubuntu_install = <<-SHELL
+
+    sudo apt-get install xubuntu-desktop
+
+    script_location="$HOME/Launch Atomic Game Engine"
+
+    echo "#!/bin/bash
+      exec #{GUEST_GIT_DIRECTORY}/Artifacts/AtomicEditor/AtomicEditor
+      " | tee "$script_location"
+    chmod 755 "$script_location"
+
+  SHELL
+end
+
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -45,7 +70,7 @@ Vagrant.configure(2) do |config|
   # the path on the host to the actual folder. The second argument is
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
-  config.vm.synced_folder "repo", "/atomic_repo", create: true
+  config.vm.synced_folder "repo", GUEST_GIT_DIRECTORY, create: true
   config.vm.synced_folder  ".", "/vagrant", disabled: true
 
   # Provider-specific configuration so you can fine-tune various
@@ -54,11 +79,12 @@ Vagrant.configure(2) do |config|
   #
   config.vm.provider "virtualbox" do |vb|
     vb.name = "atomic_vagrant_build"
-  #   # Display the VirtualBox GUI when booting the machine
-  #   vb.gui = true
-    # Customize the amount of memory on the VM:
-    vb.memory = 4096
-    vb.cpus = 2
+
+    # Display the VirtualBox GUI when booting the machine
+    vb.gui = ENABLE_VBOX_GUI
+
+    vb.memory = MEMORY
+    vb.cpus = CPU_COUNT
   end
   #
   # View the documentation for the provider you are using for more
@@ -78,15 +104,16 @@ Vagrant.configure(2) do |config|
     set -x
 
     sudo apt-get update
+    #{xubuntu_install}
     sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 libxss1 libgconf-2-4 openntpd
 
-    git clone --recursive https://github.com/AtomicGameEngine/AtomicGameEngine /atomic_repo
+    git clone --recursive https://github.com/AtomicGameEngine/AtomicGameEngine #{GUEST_GIT_DIRECTORY}
 
     # Note: Build_AtomicEditor.sh assumes the CWD is at the root of the repository.
-    cd /atomic_repo
+    cd #{GUEST_GIT_DIRECTORY}
     ./Build_AtomicEditor.sh
 
     # Create a symlink so that libcef can be found when launching the editor executable.
-    ln -s ../../Submodules/CEF/Linux/Release/libcef.so /atomic_repo/Artifacts/Build/Linux/libcef.so
+    ln -s ../../Submodules/CEF/Linux/Release/libcef.so #{GUEST_GIT_DIRECTORY}/Artifacts/Build/Linux/libcef.so
   SHELL
 end
