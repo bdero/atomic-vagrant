@@ -3,7 +3,7 @@
 
 MEMORY = 4096
 CPU_COUNT = 2
-ENABLE_VBOX_GUI = true
+ENABLE_VBOX_GUI = false
 
 GUEST_GIT_DIRECTORY = "/atomic"
 
