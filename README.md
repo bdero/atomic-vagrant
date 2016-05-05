@@ -20,12 +20,31 @@ After the build has completed successfully, the Atomic editor should be runnable
 ./atomic_editor
 ```
 
-If you want to run the provision script again, this can be done with `vagrant provision`. See also [Cleanup](#cleanup).
+If you want to run the provision script again, this can be done with `vagrant provision`. See also [Starting Over](#starting-over).
 
-## Cleanup
+## Running Atomic Within the Guest Machine
 
-Once the repo directory is created on checkout, the state of git is on your control - it will not be updated by the provision script
-If you wish to start from a fresh build, simply destroy the vagrant instance and delete the shared `repo` directory.
+While the Atomic editor is accessible on the host machine via the shared `atomic` folder after the provision script finishes, there may be cases where you want to launch and use Atomic on the guest machine.
+
+This can be done by changing `ENABLE_VBOX_GUI = false` to **true** in the [Vagrantfile](Vagrantfile) located within the same directory as this readme, and then reprovisioning:
+
+```bash
+sed 's/^ENABLE_VBOX_GUI = false/ENABLE_VBOX_GUI = true/g' Vagrantfile | tee Vagrantfile
+vagrant up --provision
+```
+
+Provisioning with `ENABLE_VBOX_GUI` set to **true** will trigger an install of the `xubuntu-desktop` packages, as well as enable the VirtualBox GUI.
+
+> Note: After the provision with `ENABLE_VBOX_GUI` set to **true** finishes successfully, you will need to reload the guest VM ( `vagrant reload` ) before you will be presented with a graphical XFCE login screen.
+
+#### Default credentials:
+
+- Username: **ubuntu**
+- Password: **vagrant**
+
+## Starting Over
+
+If you wish to start from a completely clean slate at any time, simply destroy the vagrant instance and then delete the shared `atomic` directory.
 
 ```bash
 vagrant destroy
