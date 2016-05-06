@@ -112,8 +112,5 @@ Vagrant.configure(2) do |config|
     # Note: Build_AtomicEditor.sh assumes the CWD is at the root of the repository.
     cd #{GUEST_GIT_DIRECTORY}
     ./Build_AtomicEditor.sh
-
-    # Create a symlink so that libcef can be found when launching the editor executable.
-    ln -s ../../Submodules/CEF/Linux/Release/libcef.so #{GUEST_GIT_DIRECTORY}/Artifacts/AtomicEditor/libcef.so
   SHELL
 end
