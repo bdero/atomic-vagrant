@@ -17,11 +17,13 @@ xubuntu_install = ""
 if ENABLE_VBOX_GUI
   xubuntu_install = <<-SHELL
 
-    sudo apt-get install xubuntu-desktop
+    sudo apt-get install -y xubuntu-desktop
 
-    script_location="$HOME/Launch Atomic Game Engine"
+    vagrant_home=$(eval echo ~$(ls -la #{GUEST_GIT_DIRECTORY} | grep " \.$" | awk '{ print $3 }'))
+    script_location="$vagrant_home/Desktop/Launch Atomic Game Engine"
 
     echo "#!/bin/bash
+      export LD_LIBRARY_PATH=#{GUEST_GIT_DIRECTORY}/Submodules/CEF/Linux/Release:\$LD_LIBRARY_PATH
       exec #{GUEST_GIT_DIRECTORY}/Artifacts/AtomicEditor/AtomicEditor
       " | tee "$script_location"
     chmod 755 "$script_location"
@@ -105,7 +107,10 @@ Vagrant.configure(2) do |config|
 
     sudo apt-get update
     #{xubuntu_install}
-    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 libxss1 libgconf-2-4 openntpd
+    # Provision dependencies
+    sudo apt-get install -y openntpd git
+    # Atomic build dependencies
+    sudo apt-get install -y apache2 build-essential cmake nodejs libgtk-3-dev libasound2-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev libnss3 libxss1 libgconf-2-4
 
     git clone --recursive https://github.com/AtomicGameEngine/AtomicGameEngine #{GUEST_GIT_DIRECTORY}
 
